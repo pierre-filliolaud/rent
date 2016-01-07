@@ -1,11 +1,14 @@
 package fr.efrei.rent.service;
 
-import java.util.List;
+import java.util.Collection;
 
 import fr.efrei.rent.model.Car;
 
 public interface CarService {
-
-	List<Car> getAllCars();
+	Car saveCar(Car car);
+	void deleteCar(Car car);
+	Car getCar(Long carId);
+	Collection<Car> getAllCars();
+	void deleteCar(Long carId);
 
 }
