@@ -26,7 +26,6 @@ http://www.springframework.org/schema/tx/spring-tx.xsd">
 <!-- <bean id="siteController" class="web.MyRentController">
 </bean> -->
 
-
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 	   <property name="messageConverters">
 	       <list>
