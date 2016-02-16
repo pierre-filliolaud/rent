@@ -47,6 +47,7 @@ public class CarRepositoryImpl implements CarRepository {
 		
 //		tx.begin();
 		entityManager.persist(car);
+//		car = entityManager.merge(car);
 //		entityManager.refresh(car);
 		
 //		entityManager.persist(car);
@@ -54,10 +55,31 @@ public class CarRepositoryImpl implements CarRepository {
 		return car;
 	}
 	
+	@Transactional
+	public void deleteCar(Car car) {
+//		car = entityManager.merge(car);
+//		entityManager.remove(car);
+		if (entityManager.contains(car)){
+	        entityManager.remove(car);
+	    } else {
+	    	entityManager.remove(entityManager.merge(car));
+	    }
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Collection<Car> findAllCars() {
 		Query query = entityManager.createQuery("SELECT c FROM Car c");
 		return (Collection<Car>) query.getResultList();
+	}
+	
+	public Car findById(Long carId) {
+		return entityManager.find(Car.class, carId);
+	}
+	
+	@Transactional
+	public void deleteCar(Long carId) {
+		Car car = entityManager.find(Car.class, carId);
+		deleteCar(car);
 	}
 
 }

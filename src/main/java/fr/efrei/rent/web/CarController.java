@@ -1,10 +1,12 @@
 package fr.efrei.rent.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,39 @@ public class CarController {
 	
 	List<Car> cars = new ArrayList<Car>();
 	
+	@RequestMapping(value = "/cars", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CarDTO createCar(CarDTO carDTO) {
+		Car car = convertToEntity(carDTO);
+		car = carService.saveCar(car);
+		return convertToDTO(car);
+	}
+	
+	@RequestMapping(value = "/cars", method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CarDTO updateCar(CarDTO carDTO) {
+		Car car = convertToEntity(carDTO);
+		car = carService.saveCar(car);
+		return convertToDTO(car);
+	}
+	
+	@RequestMapping(value = "/cars/{id}",
+	        method = RequestMethod.GET,
+	        produces = MediaType.APPLICATION_JSON_VALUE)
+	public CarDTO getCar(@PathVariable Long id) {
+		Car car = carService.getCar(id);
+		return convertToDTO(car);
+	}
+	
+	@RequestMapping(value = "/cars/{id}",
+	        method = RequestMethod.DELETE,
+	        produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteCar(@PathVariable Long id) {
+		carService.deleteCar(id);
+	}
+	
 //	public CarController(){
 //		Car car = new Car();
 //		car.setPlateNumber("11AA22");
@@ -45,17 +80,17 @@ public class CarController {
 	*
 	* @return all cars not rented
 	*/
-	@RequestMapping(value = "/car", method = RequestMethod.GET)
+	@RequestMapping(value = "/cars", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public List<CarDTO> getCars() {
-		List<Car> cars = carService.getAllCars();
+		Collection<Car> cars = carService.getAllCars();
 		
 		List<CarDTO> dtos = new ArrayList<CarDTO>();
 		
 		for(Car car: cars){
 			if(car.isRented() == false){
-				dtos.add( new CarDTO(car));
+				dtos.add( convertToDTO(car));
 			}
 		}
 		return dtos;
@@ -67,7 +102,7 @@ public class CarController {
 	* @return car specifications only (if not rented)
 	* @throws Exception no car with this plate number or already rented
 	*/
-	@RequestMapping(value = "/car/{plateNumber}", method = RequestMethod.GET)
+	@RequestMapping(value = "/cars/{plateNumber}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public CarDTO getCar(@PathVariable("plateNumber") String plateNumber) throws Exception {
@@ -78,7 +113,7 @@ public class CarController {
 		if(i<cars.size()){
 			Car car = cars.get(i);
 			if(car.isRented() == false){
-				return new CarDTO(car);
+				return convertToDTO(car);
 			} else {
 				throw new Exception("Car already rented");
 			}
@@ -93,7 +128,7 @@ public class CarController {
 	* @return car specifications
 	* @throws Exception no car with this plate number or already rented
 	*/
-	@RequestMapping(value = "/car/{plateNumber}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/cars/{plateNumber}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public void rentCar(@PathVariable("plateNumber") String plateNumber, @RequestParam(value="rent",required=true)boolean rent) throws Exception {
 		int i=0;
@@ -111,6 +146,20 @@ public class CarController {
 			throw new Exception("No car with such a plate number");
 		}
 		
+	}
+	
+	private CarDTO convertToDTO(Car car) {
+		CarDTO carDTO = new CarDTO();
+		carDTO.setId(car.getId());
+		carDTO.setPlateNumber(car.getPlateNumber());
+		return carDTO;
+	}
+	
+	private Car convertToEntity(CarDTO carDTO) {
+		Car car = new Car();
+		car.setId(carDTO.getId());
+		car.setPlateNumber(carDTO.getPlateNumber());
+		return car;
 	}
 
 }

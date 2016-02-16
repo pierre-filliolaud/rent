@@ -1,7 +1,6 @@
 package fr.efrei.rent.service;
 
 import java.util.Collection;
-import java.util.List;
 
 import junit.framework.Assert;
 
@@ -12,7 +11,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.efrei.rent.model.Car;
-import fr.efrei.rent.web.dto.CarDTO;
 
 @ContextConfiguration(locations = "classpath:/META-INF/spring/applicationContext-test*.xml")
 @RunWith(SpringJUnit4ClassRunner.class)

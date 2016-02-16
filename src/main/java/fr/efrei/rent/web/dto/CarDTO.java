@@ -1,13 +1,20 @@
 package fr.efrei.rent.web.dto;
 
-import fr.efrei.rent.model.Car;
 
 public class CarDTO {
 	
+	Long id;
 	String plateNumber;
 
-	public CarDTO(Car car) {
-		plateNumber = car.getPlateNumber();
+	public CarDTO() {
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getPlateNumber() {
